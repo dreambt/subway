@@ -4,6 +4,9 @@
  */
 package com.yeepay.subway;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +24,8 @@ import java.util.Map;
  */
 public abstract class AbstractSubwaySystem {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSubwaySystem.class);
+
 	/**
 	 * 所有地铁线路
 	 */
@@ -36,10 +41,12 @@ public abstract class AbstractSubwaySystem {
 	 */
 	protected Map<String, SubwayStation> subwayStationMap;
 
-	public String calculate(final String start, final String end) {
+	public String calculate(final String from, final String to) {
+		LOGGER.debug("start to calculate, from:{}, to:{}", from, to);
+
 		// 数据校验
-		SubwayStation source = checkAndGetStation(start);
-		SubwayStation destination = checkAndGetStation(end);
+		SubwayStation source = checkAndGetStation(from);
+		SubwayStation destination = checkAndGetStation(to);
 
 		// 初始化试探路径
 		List<TraversalRecord> traversalList = new ArrayList<TraversalRecord>();
@@ -53,7 +60,9 @@ public abstract class AbstractSubwaySystem {
 		List<TraversalRecord> finalTraversalList = traversal(traversalList, traversedStation, destination);
 
 		// 构造结果并返回
-		return buildResult(finalTraversalList);
+		String result = buildResult(finalTraversalList);
+		LOGGER.debug("calculate result:{}", result);
+		return result;
 	}
 
 	/**

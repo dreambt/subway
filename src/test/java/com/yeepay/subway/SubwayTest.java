@@ -1,13 +1,14 @@
-/**
+package com.yeepay.subway; /**
  * Copyright: Copyright (c)2011
  * Company: 易宝支付(YeePay)
  */
 
-import com.yeepay.subway.SubwaySystem;
-import com.yeepay.subway.SubwaySystemImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StopWatch;
 
 import java.io.*;
 import java.util.Arrays;
@@ -27,11 +28,24 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class SubwayTest {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(SubwayTest.class);
+
 	private static SubwaySystem subwaySystem;
 
 	@Test
 	public void testName() throws Exception {
-		String traversalResult = subwaySystem.calculate(start, end);
+		String traversalResult = null;
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start("calculateTotal");
+		for (int i = 0; i < 1000; ++i) {
+//			StopWatch stopWatch1 = new StopWatch();
+//			stopWatch1.start("calculate");
+			traversalResult = subwaySystem.calculate(start, end);
+//			stopWatch1.stop();
+//			LOGGER.debug("calculate used {} ms", stopWatch1.getTotalTimeMillis());
+		}
+		stopWatch.stop();
+		LOGGER.debug("calculate total used {} ms", stopWatch.getTotalTimeMillis());
 		assertEquals(expected, traversalResult);
 	}
 
@@ -55,7 +69,12 @@ public class SubwayTest {
 
 		// 构建北京地铁
 		subwaySystem = new SubwaySystemImpl();
+
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start("loadData");
 		subwaySystem.loadData(filePath + "subway.txt");
+		stopWatch.stop();
+		LOGGER.debug("loadData used {} ms", stopWatch.getTotalTimeMillis());
 
 		Object[][] object = new Object[5][3];
 		for (int i = 0; i < 5; ++i) {

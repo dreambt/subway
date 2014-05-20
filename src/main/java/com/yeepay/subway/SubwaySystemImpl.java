@@ -4,6 +4,9 @@
  */
 package com.yeepay.subway;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 
 /**
@@ -16,6 +19,8 @@ import java.util.*;
  * @version 0.1, 14-5-6 23:11
  */
 public class SubwaySystemImpl extends AbstractSubwaySystem implements SubwaySystem {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SubwaySystemImpl.class);
 
 	public List<TraversalRecord> traversal(List<TraversalRecord> traversalList, Map<String, SubwayStation> traversedStation, SubwayStation destination) {
 		List<TraversalRecord> newTraversalList = new ArrayList<TraversalRecord>();
